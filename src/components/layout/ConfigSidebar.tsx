@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronRight, Truck } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 const configMenu = [
   {
@@ -100,7 +100,7 @@ const configMenu = [
         path: "/dashboard/configuracion/distribucion/configuracion-de-reglas"
       },
     ],
-    },
+  },
   { label: "Reservación", path: "/dashboard/configuracion/reservacion",
     subItems: [
       {
@@ -189,13 +189,10 @@ const configMenu = [
 
 const ConfigSidebar: React.FC = () => {
   const location = useLocation();
-  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const handleToggle = (path: string) => {
-    setOpenMenus((prev) => ({
-      ...prev,
-      [path]: !prev[path],
-    }));
+  const handleMenuClick = (path: string) => {
+    setActiveMenu(activeMenu === path ? null : path);
   };
 
   return (
@@ -203,32 +200,21 @@ const ConfigSidebar: React.FC = () => {
       <ul>
         {configMenu.map((item) => (
           <li key={item.path}>
-            {item.subItems ? (
-              <button
-                type="button"
-                onClick={() => handleToggle(item.path)}
-                className={`flex items-center w-full px-4 py-2 text-left ${
-                  location.pathname.startsWith(item.path)
-                    ? "bg-blue-100 text-blue-700"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                <span className="flex-1">{item.label}</span>
-                {openMenus[item.path] ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-              </button>
-            ) : (
-              <Link
-                to={item.path}
-                className={`block px-4 py-2 ${
-                  location.pathname === item.path
-                    ? "bg-blue-100 text-blue-700"
-                    : "hover:bg-gray-100"
-                } flex items-center gap-2`}
-              >
-                {item.label}
-              </Link>
-            )}
-            {item.subItems && openMenus[item.path] && (
+            <button
+              type="button"
+              onClick={() => handleMenuClick(item.path)}
+              className={`flex items-center w-full px-4 py-2 text-left ${
+                location.pathname.startsWith(item.path)
+                  ? "bg-blue-100 text-blue-700"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex-1">{item.label}</span>
+              {item.subItems && (
+                activeMenu === item.path ? <ChevronDown size={16} /> : <ChevronRight size={16} />
+              )}
+            </button>
+            {item.subItems && activeMenu === item.path && (
               <ul className="ml-4">
                 {item.subItems.map((sub) => (
                   <li key={sub.path}>
