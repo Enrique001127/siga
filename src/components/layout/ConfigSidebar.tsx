@@ -4,40 +4,6 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 
 const configMenu = [
   {
-    label: "Seguridad",
-    path: "/dashboard/configuracion/seguridad",
-    subItems: [
-      {
-        label: "Sistemas",
-        path: "/dashboard/configuracion/seguridad/sistemas",
-      },
-      {
-        label: "Módulos",
-        path: "/dashboard/configuracion/seguridad/modulos",
-      },
-      {
-        label: "Agrupación funcional",
-        path: "/dashboard/configuracion/seguridad/agrupacion-funcional",
-      },
-      {
-        label: "Funcionalidades",
-        path: "/dashboard/configuracion/seguridad/funcionalidades",
-      },
-      {
-        label: "Roles",
-        path: "/dashboard/configuracion/seguridad/roles",
-      },
-      {
-        label: "Grupos de roles",
-        path: "/dashboard/configuracion/seguridad/grupos-roles",
-      },
-      {
-        label: "Usuarios",
-        path: "/dashboard/configuracion/seguridad/usuarios",
-      },
-    ],
-  },
-  {
     label: "Abastecimiento",
     path: "/dashboard/configuracion/abastecimiento",
     subItems: [
@@ -71,39 +37,35 @@ const configMenu = [
       },
     ],
   },
-  { 
-    label: "Cajero", 
-    path: "/dashboard/configuracion/cajero",
+  { label: "Cajero", path: "/dashboard/configuracion/cajero",
     subItems: [
-      {
-        label: "Tipos de tarjetas",
-        path: "/dashboard/configuracion/cajero/tipos de tarjetas"
-      },
-      {
-        label: "Tarjetas",
-        path: "/dashboard/configuracion/cajero/tarjetas"
-      },
-      {
-        label: "Asignar IP a puertas",
-        path: "/dashboard/configuracion/cajero/asignar-ip-a-puertas"
-      },
-      {
-        label: "Configuraciones",
-        path: "/dashboard/configuracion/cajero/configuraciones"
-      },
-      {
-        label: "Torpedos",
-        path: "/dashboard/configuracion/cajero/torpedos"
-      },
-      {
-        label: "Solapin perdido",
-        path: "/dashboard/configuracion/cajero/solapin-perdido"
-      },
+        {
+          label: "Tipos de tarjetas",
+          path: "/dashboard/configuracion/cajero/tipos de tarjetas"
+        },
+        {
+          label: "Tarjetas",
+          path: "/dashboard/configuracion/cajero/tarjetas"
+        },
+        {
+          label: "Asignar IP a puertas",
+          path: "/dashboard/configuracion/cajero/asignar-ip-a-puertas"
+        },
+        {
+          label: "Configuraciones",
+          path: "/dashboard/configuracion/cajero/configuraciones"
+        },
+        {
+          label: "Torpedos",
+          path: "/dashboard/configuracion/cajero/torpedos"
+        },
+        {
+          label: "Solapin perdido",
+          path: "/dashboard/configuracion/cajero/solapin-perdido"
+        },
     ],
   },
-  { 
-    label: "Facturación", 
-    path: "/dashboard/configuracion/facturacion",
+  { label: "Facturación", path: "/dashboard/configuracion/facturacion", 
     subItems: [
       {
         label: "Reglas a excluir",
@@ -111,9 +73,7 @@ const configMenu = [
       },
     ],
   },
-  { 
-    label: "Distribución", 
-    path: "/dashboard/configuracion/distribucion",
+  { label: "Distribución", path: "/dashboard/configuracion/distribucion",
     subItems: [
       {
         label: "Categorías",
@@ -141,9 +101,7 @@ const configMenu = [
       },
     ],
   },
-  { 
-    label: "Reservación", 
-    path: "/dashboard/configuracion/reservacion",
+  { label: "Reservación", path: "/dashboard/configuracion/reservacion",
     subItems: [
       {
         label: "Configuraciones",
@@ -155,9 +113,7 @@ const configMenu = [
       },
     ],
   },
-  { 
-    label: "Configuración", 
-    path: "/dashboard/configuracion",
+  { label: "Configuración", path: "/dashboard/configuracion", 
     subItems: [
       {
         label: "Configuración de comensales",
@@ -194,6 +150,38 @@ const configMenu = [
       {
         label: "Avisos",
         path: "/dashboard/configuracion/facturacion/avisos"
+      },
+    ],
+  },
+  { label: "Seguridad", path: "/dashboard/configuracion/seguridad", 
+    subItems: [
+      {
+        label: "Sistemas",
+        path: "/dashboard/configuracion/seguridad/sistemas"
+      },
+      {
+        label: "Módulos",
+        path: "/dashboard/configuracion/seguridad/modulos"
+      },
+      {
+        label: "Agrupación funcional",
+        path: "/dashboard/configuracion/seguridad/agrupacion-funcional"
+      },
+      {
+        label: "Funcionalidades",
+        path: "/dashboard/configuracion/seguridad/funcionalidades"
+      },
+      {
+        label: "Roles",
+        path: "/dashboard/configuracion/seguridad/roles"
+      },
+      {
+        label: "Grupos de roles",
+        path: "/dashboard/configuracion/seguridad/grupos-roles"
+      },
+      {
+        label: "Usuarios",
+        path: "/dashboard/configuracion/seguridad/usuarios"
       },
     ],
   },
