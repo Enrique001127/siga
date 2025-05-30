@@ -8,6 +8,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import UsersPage from './pages/admin/UsersPage';
 import ConfiguracionPage from './pages/admin/ConfiguracionPage';
+import SystemsPage from './pages/admin/SystemsPage';
 
 function App() {
   return (
@@ -22,10 +23,9 @@ function App() {
           <Route path="/dashboard/admin/usuarios" element={<UsersPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/dashboard/configuracion/*" element={<ConfiguracionPage />} />
+          <Route path="/dashboard/configuracion/seguridad/sistemas" element={<SystemsPage />} />
         </Routes>
       </Router>
     </AuthProvider>
   );
 }
-
-export default App;
