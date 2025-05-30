@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import UsersPage from './pages/admin/UsersPage';
+import ConfiguracionPage from './pages/admin/ConfiguracionPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/dashboard/:section" element={<PlaceholderPage />} />
           <Route path="/dashboard/admin/usuarios" element={<UsersPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/dashboard/configuracion/*" element={<ConfiguracionPage />} />
         </Routes>
       </Router>
     </AuthProvider>

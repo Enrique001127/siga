@@ -12,16 +12,40 @@ const adminSubmenu = [
   { id: 'usuarios', label: 'Usuarios', path: '/dashboard/admin/usuarios', icon: <User size={20} /> },
 ];
 
-const menuItems = [
+// Type definitions for menu structure
+type SubSubMenuItem = {
+  id: string;
+  label: string;
+  path: string;
+  items?: SubSubMenuItem[];
+};
+
+type SubMenuItem = {
+  id: string;
+  label: string;
+  path: string;
+  icon: React.ReactElement;
+  subItems?: SubSubMenuItem[];
+};
+
+type MenuItem = {
+  id: string;
+  label: string;
+  path: string;
+  icon: React.ReactElement;
+  submenu?: SubMenuItem[];
+};
+
+const menuItems: MenuItem[] = [
   { 
     id: 'abastecimiento',
     label: 'Abastecimiento',
     path: '/dashboard/abastecimiento',
     icon: <Truck size={20} />,
     submenu: [
-      { id: 'proveedores', label: 'Proveedores', path: '/dashboard/abastecimiento/proveedores', icon: <HandPlatter size={20} /> },
-      { id: 'compras', label: 'Compras', path: '/dashboard/abastecimiento/compras', icon: <ShoppingCart size={20} /> },
-      { id: 'inventario', label: 'Inventario', path: '/dashboard/abastecimiento/inventario', icon: <Package size={20} /> }
+      { id: 'productos', label: 'Productos disponibles', path: '/dashboard/abastecimiento/productos', icon: <Package size={20} /> },
+      { id: 'platos', label: 'Platos', path: '/dashboard/abastecimiento/platos', icon: <HandPlatter size={20} /> },
+      { id: 'menu', label: 'Menú', path: '/dashboard/abastecimiento/menu', icon: <FileText size={20} /> }
     ]
   },
   { 
@@ -30,8 +54,42 @@ const menuItems = [
     path: '/dashboard/reservacion',
     icon: <CalendarCheck size={20} />,
     submenu: [
-      { id: 'nueva-reserva', label: 'Nueva Reserva', path: '/dashboard/reservacion/nueva', icon: <Calendar size={20} /> },
-      { id: 'lista-reservas', label: 'Lista de Reservas', path: '/dashboard/reservacion/lista', icon: <ClipboardList size={20} /> }
+      { 
+        id: 'reservar',
+        label: 'Reservación',
+        path: '/dashboard/reservacion/reservar',
+        icon: <Calendar size={20} />,
+        subItems: [
+          { id: 'personal', label: 'Reservar', path: '/dashboard/reservacion/reservar/personal' },
+          { id: 'familiar', label: 'Reservar a familiar', path: '/dashboard/reservacion/reservar/familiar' },
+          { id: 'asociados', label: 'Reservar a asociados', path: '/dashboard/reservacion/reservar/asociados' },
+          { id: 'terceros', label: 'Reservar a terceros', path: '/dashboard/reservacion/reservar/terceros' },
+          { id: 'categoria', label: 'Reservar por categoría', path: '/dashboard/reservacion/reservar/categoria' }
+        ]
+      },
+      { 
+        id: 'datos-usuarios',
+        label: 'Datos de usuarios',
+        path: '/dashboard/reservacion/datos-usuarios',
+        icon: <Users size={20} />,
+        subItems: [
+          { id: 'reservaciones', label: 'Reservaciones', path: '/dashboard/reservacion/datos-usuarios/reservaciones' },
+          { id: 'distribuciones', label: 'Distribuciones', path: '/dashboard/reservacion/datos-usuarios/distribuciones' },
+          { id: 'facturaciones', label: 'Facturaciones', path: '/dashboard/reservacion/datos-usuarios/facturaciones' },
+          { id: 'accesos', label: 'Accesos', path: '/dashboard/reservacion/datos-usuarios/accesos' },
+          { id: 'tarjetas', label: 'Tarjetas', path: '/dashboard/reservacion/datos-usuarios/tarjetas' }
+        ]
+      },
+      { 
+        id: 'reportes',
+        label: 'Reportes',
+        path: '/dashboard/reservacion/reportes',
+        icon: <FileText2 size={20} />,
+        subItems: [
+          { id: 'platos', label: 'Lista de platos', path: '/dashboard/reservacion/reportes/platos' },
+          { id: 'menus', label: 'Lista de menús', path: '/dashboard/reservacion/reportes/menus' }
+        ]
+      }
     ]
   },
   { 
@@ -40,19 +98,18 @@ const menuItems = [
     path: '/dashboard/distribucion',
     icon: <Share2 size={20} />,
     submenu: [
-      { id: 'almacenes', label: 'Almacenes', path: '/dashboard/distribucion/almacenes', icon: <Warehouse size={20} /> },
-      { id: 'pedidos', label: 'Pedidos', path: '/dashboard/distribucion/pedidos', icon: <ClipboardList size={20} /> },
-      { id: 'entregas', label: 'Entregas', path: '/dashboard/distribucion/entregas', icon: <Truck size={20} /> }
+      { id: 'distribucion', label: 'Distribución', path: '/dashboard/distribucion/distribucion', icon: <Share2 size={20} /> },
+      { id: 'actualizar', label: 'Actualizar distribución a personas', path: '/dashboard/distribucion/actualizar', icon: <Users size={20} /> },
+      { id: 'no-distribuidas', label: 'Personas no distribuidas', path: '/dashboard/distribucion/no-distribuidas', icon: <UserSquare size={20} /> }
     ]
   },
   { 
     id: 'cajero',
     label: 'Cajero',
     path: '/dashboard/cajero',
-    icon: <UserSquare size={20} />,
+    icon: <CreditCard size={20} />,
     submenu: [
-      { id: 'ventas', label: 'Ventas', path: '/dashboard/cajero/ventas', icon: <CreditCard size={20} /> },
-      { id: 'cierres', label: 'Cierres de Caja', path: '/dashboard/cajero/cierres', icon: <FileSpreadsheet size={20} /> }
+      { id: 'cajero', label: 'Cajero', path: '/dashboard/cajero/cajero', icon: <CreditCard size={20} /> }
     ]
   },
   { 
@@ -61,34 +118,64 @@ const menuItems = [
     path: '/dashboard/facturacion',
     icon: <Receipt size={20} />,
     submenu: [
-      { id: 'facturas', label: 'Facturas', path: '/dashboard/facturacion/facturas', icon: <FileText size={20} /> },
-      { id: 'pagos', label: 'Pagos', path: '/dashboard/facturacion/pagos', icon: <CreditCard size={20} /> },
-      { id: 'historial', label: 'Historial', path: '/dashboard/facturacion/historial', icon: <FileText2 size={20} /> }
+      { id: 'importes', label: 'Importes', path: '/dashboard/facturacion/importes', icon: <Receipt size={20} /> }
     ]
   },
   { 
     id: 'reportes',
     label: 'Reportes',
     path: '/dashboard/reportes',
-    icon: <FileText size={20} />,
+    icon: <FileSpreadsheet size={20} />,
     submenu: [
-      { id: 'ventas', label: 'Reporte de Ventas', path: '/dashboard/reportes/ventas', icon: <BarChart size={20} /> },
-      { id: 'inventario', label: 'Reporte de Inventario', path: '/dashboard/reportes/inventario', icon: <FileSpreadsheet size={20} /> },
-      { id: 'financiero', label: 'Reporte Financiero', path: '/dashboard/reportes/financiero', icon: <FileText2 size={20} /> }
+      { 
+        id: 'generales',
+        label: 'Generales',
+        path: '/dashboard/reportes/generales',
+        icon: <FileText size={20} />,
+        subItems: [
+          { id: 'parte-general', label: 'Parte general', path: '/dashboard/reportes/generales/parte-general' }
+        ]
+      },
+      { 
+        id: 'especificos',
+        label: 'Específicos',
+        path: '/dashboard/reportes/especificos',
+        icon: <FileText2 size={20} />,
+        subItems: [
+          { id: 'comensales', label: 'Lista de comensales', path: '/dashboard/reportes/especificos/comensales' },
+          { id: 'reservaciones', label: 'Lista de reservaciones', path: '/dashboard/reportes/especificos/reservaciones' },
+          { id: 'distribuciones', label: 'Lista de distribuciones', path: '/dashboard/reportes/especificos/distribuciones' },
+          { id: 'accesos', label: 'Lista de accesos', path: '/dashboard/reportes/especificos/accesos' },
+          { id: 'errores', label: 'Lista de personas con error de acceso', path: '/dashboard/reportes/especificos/errores' },
+          { id: 'tarjetas', label: 'Lista de personas con tarjetas', path: '/dashboard/reportes/especificos/tarjetas' },
+          { id: 'estructuras', label: 'Lista de estructuras y reglas', path: '/dashboard/reportes/especificos/estructuras' },
+          { id: 'movimientos', label: 'Movimiento de asignaciones', path: '/dashboard/reportes/especificos/movimientos' },
+          { id: 'exportar', label: 'Reservaciones de usuario exportar', path: '/dashboard/reportes/especificos/exportar' },
+          { id: 'trazas', label: 'Trazas', path: '/dashboard/reportes/especificos/trazas' }
+        ]
+      }
     ]
-  }
+  },
 ];
 
 const NavMenu: React.FC = () => {
   const location = useLocation();
   const [showAdminMenu, setShowAdminMenu] = React.useState(false);
+  const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
   
+  const handleSubmenuHover = (menuId: string) => {
+    setActiveSubmenu(menuId);
+  };
+
   return (
     <nav className="mt-4">
       <div className="flex items-center justify-between border-b border-t border-gray-300">
         <ul className="flex space-x-6">
           {menuItems.map((item) => (
-            <li key={item.id} className="group relative">
+            <li key={item.id} 
+                className="group relative"
+                onMouseEnter={() => handleSubmenuHover(item.id)}
+                onMouseLeave={() => handleSubmenuHover('')}>
               <Link
                 to={item.path}
                 className={`flex items-center px-2 py-1 text-sm font-medium transition-colors ${
@@ -101,49 +188,93 @@ const NavMenu: React.FC = () => {
                 <span className="ml-2">{item.label}</span>
               </Link>
 
-              {/* Submenu */}
-              <div className="absolute left-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                <ul className="py-2">
-                  {item.submenu.map((subitem) => (
-                    <li key={subitem.id}>
-                      <Link
-                        to={subitem.path}
-                        className={`flex items-center px-4 py-2 text-sm ${
-                          location.pathname === subitem.path
-                            ? 'text-blue-600 bg-blue-50'
-                            : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                      >
-                        {subitem.icon}
-                        <span className="ml-2">{subitem.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Main Submenu */}
+              {item.submenu && activeSubmenu === item.id && (
+                <div className="absolute left-0 top-full mt-1 w-64 bg-white rounded-md shadow-lg z-50">
+                  <ul className="py-2">
+                    {item.submenu.map((subitem) => (
+                      <li key={subitem.id} className="relative group/sub">
+                        <Link
+                          to={subitem.path}
+                          className={`flex items-center px-4 py-2 text-sm ${
+                            location.pathname === subitem.path
+                              ? 'text-blue-600 bg-blue-50'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          {subitem.icon}
+                          <span className="ml-2">{subitem.label}</span>
+                          {subitem.subItems && (
+                            <span className="ml-auto">›</span>
+                          )}
+                        </Link>
+
+                        {/* Sub-submenu */}
+                        {subitem.subItems && (
+                          <div className="absolute left-full top-0 ml-1 w-64 bg-white rounded-md shadow-lg invisible group-hover/sub:visible">
+                            <ul className="py-2">
+                              {subitem.subItems.map((subSubItem) => (
+                                <li key={subSubItem.id} className="relative group/subsub">
+                                  <Link
+                                    to={subSubItem.path}
+                                    className={`flex items-center px-4 py-2 text-sm ${
+                                      location.pathname === subSubItem.path
+                                        ? 'text-blue-600 bg-blue-50'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                  >
+                                    <span className="ml-2">{subSubItem.label}</span>
+                                    {subSubItem.items && (
+                                      <span className="ml-auto">›</span>
+                                    )}
+                                  </Link>
+
+                                  {/* Deep submenu for specific items */}
+                                  {subSubItem.items && (
+                                    <div className="absolute left-full top-0 ml-1 w-72 bg-white rounded-md shadow-lg invisible group-hover/subsub:visible">
+                                      <ul className="py-2">
+                                        {subSubItem.items.map((deepItem) => (
+                                          <li key={deepItem.id}>
+                                            <Link
+                                              to={deepItem.path}
+                                              className={`flex items-center px-4 py-2 text-sm ${
+                                                location.pathname === deepItem.path
+                                                  ? 'text-blue-600 bg-blue-50'
+                                                  : 'text-gray-700 hover:bg-gray-100'
+                                              }`}
+                                            >
+                                              <span className="ml-2">{deepItem.label}</span>
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </li>
           ))}
         </ul>
         
         <div className="flex items-center space-x-4">
-          {/* <div className="group relative">
-            <Link to="/dashboard/settings" className="text-gray-600 hover:text-blue-600">
-              <Settings size={20} />
-              <span className="sr-only">Configuración</span>
-            </Link>
-            <span className="absolute right-0 top-full mt-1 w-24 rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-              Configuración
-            </span>
-          </div> */}
-          
           <div className="group relative">
-            <button
-              onClick={() => setShowAdminMenu(!showAdminMenu)}
-              className={`text-gray-600 flex items-center hover:text-blue-600 ${showAdminMenu ? 'text-blue-600' : ''}`}
+            <Link
+              to="/dashboard/configuracion"
+              className={`text-gray-600 flex items-center hover:text-blue-600 ${
+                location.pathname.startsWith('/dashboard/configuracion') ? 'text-blue-600' : ''
+              }`}
             >
               <Settings size={20} />
               <span className="sr-only">Configuración</span>
-            </button>
+            </Link>
             <span className="absolute right-0 top-full mt-1 w-24 rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
               Configuración
             </span>
