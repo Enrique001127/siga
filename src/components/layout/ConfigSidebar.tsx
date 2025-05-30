@@ -156,12 +156,32 @@ const configMenu = [
   { label: "Seguridad", path: "/dashboard/configuracion/seguridad", 
     subItems: [
       {
-        label: "Configuraciones",
-        path: "/dashboard/configuracion/facturacion/configuraciones"
+        label: "Sistemas",
+        path: "/dashboard/configuracion/seguridad/sistemas"
       },
       {
-        label: "Asignar responsable de reservacion",
-        path: "/dashboard/configuracion/facturacion/asignar-responsable-de-reservacion"
+        label: "Módulos",
+        path: "/dashboard/configuracion/seguridad/modulos"
+      },
+      {
+        label: "Agrupación funcional",
+        path: "/dashboard/configuracion/seguridad/agrupacion-funcional"
+      },
+      {
+        label: "Funcionalidades",
+        path: "/dashboard/configuracion/seguridad/funcionalidades"
+      },
+      {
+        label: "Roles",
+        path: "/dashboard/configuracion/seguridad/roles"
+      },
+      {
+        label: "Grupos de roles",
+        path: "/dashboard/configuracion/seguridad/grupos-roles"
+      },
+      {
+        label: "Usuarios",
+        path: "/dashboard/configuracion/seguridad/usuarios"
       },
     ],
   },
