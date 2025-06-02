@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import ConfigSidebar from '../../components/layout/ConfigSidebar';
-import { Search, Plus, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Search, Plus, ChevronRight, ChevronLeft, Trash2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 interface SystemOption {
@@ -38,6 +38,12 @@ const SystemsPage: React.FC = () => {
     setSelectedChosen([]);
   };
 
+  const handleDelete = () => {
+    const updatedSelectedOptions = selectedOptions.filter(option => !selectedChosen.includes(option.id));
+    setSelectedOptions(updatedSelectedOptions);
+    setSelectedChosen([]);
+  };
+
   const filteredAvailableOptions = availableOptions.filter(option =>
     option.label.toLowerCase().includes(searchLeft.toLowerCase())
   );
@@ -53,10 +59,21 @@ const SystemsPage: React.FC = () => {
         <div className="flex-1 p-6">
           <div className="mb-6 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Configuración de Sistemas</h1>
-            <Button variant="primary" className="flex items-center gap-2">
-              <Plus size={20} />
-              Agregar Sistema
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="primary" className="flex items-center gap-2">
+                <Plus size={20} />
+                Agregar Sistema
+              </Button>
+              <Button 
+                variant="secondary" 
+                className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                onClick={handleDelete}
+                disabled={selectedChosen.length === 0}
+              >
+                <Trash2 size={20} />
+                Eliminar
+              </Button>
+            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
