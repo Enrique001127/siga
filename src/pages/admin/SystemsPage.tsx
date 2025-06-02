@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import ConfigSidebar from '../../components/layout/ConfigSidebar';
-import { Search, Plus, ChevronRight, ChevronLeft, Trash2 } from 'lucide-react';
+import { Search, Plus, ChevronRight, ChevronLeft, Trash2, X } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import * as Dialog from '@radix-ui/react-dialog';
 
 interface SystemOption {
   id: string;
   label: string;
+}
+
+interface SystemForm {
+  name: string;
+  code: string;
+  acronym: string;
+  path: string;
+  icon: string;
 }
 
 const SystemsPage: React.FC = () => {
@@ -23,6 +32,14 @@ const SystemsPage: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<SystemOption[]>([]);
   const [selectedAvailable, setSelectedAvailable] = useState<string[]>([]);
   const [selectedChosen, setSelectedChosen] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState<SystemForm>({
+    name: '',
+    code: '',
+    acronym: '',
+    path: '',
+    icon: '',
+  });
 
   const handleMoveRight = () => {
     const itemsToMove = availableOptions.filter(option => selectedAvailable.includes(option.id));
@@ -44,6 +61,39 @@ const SystemsPage: React.FC = () => {
     setSelectedChosen([]);
   };
 
+  const handleSaveChanges = () => {
+    // Aquí iría la lógica para guardar los cambios
+    console.log('Cambios guardados:', {
+      selectedOptions,
+      availableOptions
+    });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAddSystem = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newSystem: SystemOption = {
+      id: String(Date.now()),
+      label: formData.name
+    };
+    setAvailableOptions(prev => [...prev, newSystem]);
+    setIsModalOpen(false);
+    setFormData({
+      name: '',
+      code: '',
+      acronym: '',
+      path: '',
+      icon: ''
+    });
+  };
+
   const filteredAvailableOptions = availableOptions.filter(option =>
     option.label.toLowerCase().includes(searchLeft.toLowerCase())
   );
@@ -60,10 +110,102 @@ const SystemsPage: React.FC = () => {
           <div className="mb-6 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Configuración de Sistemas</h1>
             <div className="flex gap-2">
-              <Button variant="primary" className="flex items-center gap-2">
-                <Plus size={20} />
-                Agregar Sistema
-              </Button>
+              <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <Dialog.Trigger asChild>
+                  <Button variant="primary" className="flex items-center gap-2">
+                    <Plus size={20} />
+                    Agregar Sistema
+                  </Button>
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+                  <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-[400px]">
+                    <div className="flex justify-between items-center mb-4">
+                      <Dialog.Title className="text-xl font-bold">Agregar Nuevo Sistema</Dialog.Title>
+                      <Dialog.Close asChild>
+                        <button className="text-gray-400 hover:text-gray-600">
+                          <X size={24} />
+                        </button>
+                      </Dialog.Close>
+                    </div>
+                    <form onSubmit={handleAddSystem}>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Nombre
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Código de sistema
+                          </label>
+                          <input
+                            type="text"
+                            name="code"
+                            value={formData.code}
+                            onChange={handleInputChange}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Acrónimo
+                          </label>
+                          <input
+                            type="text"
+                            name="acronym"
+                            value={formData.acronym}
+                            onChange={handleInputChange}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Ruta
+                          </label>
+                          <input
+                            type="text"
+                            name="path"
+                            value={formData.path}
+                            onChange={handleInputChange}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Icono
+                          </label>
+                          <input
+                            type="text"
+                            name="icon"
+                            value={formData.icon}
+                            onChange={handleInputChange}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-6 flex justify-end gap-2">
+                        <Dialog.Close asChild>
+                          <Button variant="secondary">Cancelar</Button>
+                        </Dialog.Close>
+                        <Button type="submit" variant="primary">Guardar</Button>
+                      </div>
+                    </form>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
               <Button 
                 variant="secondary" 
                 className="flex items-center gap-2 text-red-600 hover:text-red-700"
@@ -171,6 +313,15 @@ const SystemsPage: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Button
+                variant="primary"
+                onClick={handleSaveChanges}
+                className="px-6"
+              >
+                Listo
+              </Button>
             </div>
           </div>
         </div>
