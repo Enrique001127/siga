@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
+import ConfigSidebar from '../../components/layout/ConfigSidebar';
 import { Search, Plus, ChevronRight, ChevronLeft } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -47,108 +48,111 @@ const SystemsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Configuración de Sistemas</h1>
-          <Button variant="primary" className="flex items-center gap-2">
-            <Plus size={20} />
-            Agregar Sistema
-          </Button>
-        </div>
+      <div className="flex h-full">
+        <ConfigSidebar />
+        <div className="flex-1 p-6">
+          <div className="mb-6 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">Configuración de Sistemas</h1>
+            <Button variant="primary" className="flex items-center gap-2">
+              <Plus size={20} />
+              Agregar Sistema
+            </Button>
+          </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex gap-4">
-            {/* Available Options */}
-            <div className="flex-1">
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <input
-                    type="text"
-                    placeholder="Buscar sistemas disponibles..."
-                    className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={searchLeft}
-                    onChange={(e) => setSearchLeft(e.target.value)}
-                  />
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex gap-4">
+              {/* Available Options */}
+              <div className="flex-1">
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Buscar sistemas disponibles..."
+                      className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={searchLeft}
+                      onChange={(e) => setSearchLeft(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="border rounded-lg h-96 overflow-y-auto">
+                  {filteredAvailableOptions.map(option => (
+                    <div
+                      key={option.id}
+                      className={`p-3 cursor-pointer ${
+                        selectedAvailable.includes(option.id)
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => {
+                        if (selectedAvailable.includes(option.id)) {
+                          setSelectedAvailable(selectedAvailable.filter(id => id !== option.id));
+                        } else {
+                          setSelectedAvailable([...selectedAvailable, option.id]);
+                        }
+                      }}
+                    >
+                      {option.label}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="border rounded-lg h-96 overflow-y-auto">
-                {filteredAvailableOptions.map(option => (
-                  <div
-                    key={option.id}
-                    className={`p-3 cursor-pointer ${
-                      selectedAvailable.includes(option.id)
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'hover:bg-gray-50'
-                    }`}
-                    onClick={() => {
-                      if (selectedAvailable.includes(option.id)) {
-                        setSelectedAvailable(selectedAvailable.filter(id => id !== option.id));
-                      } else {
-                        setSelectedAvailable([...selectedAvailable, option.id]);
-                      }
-                    }}
-                  >
-                    {option.label}
-                  </div>
-                ))}
+
+              {/* Control Buttons */}
+              <div className="flex flex-col items-center justify-center gap-4">
+                <Button
+                  onClick={handleMoveRight}
+                  disabled={selectedAvailable.length === 0}
+                  variant="secondary"
+                  className="p-2"
+                >
+                  <ChevronRight size={24} />
+                </Button>
+                <Button
+                  onClick={handleMoveLeft}
+                  disabled={selectedChosen.length === 0}
+                  variant="secondary"
+                  className="p-2"
+                >
+                  <ChevronLeft size={24} />
+                </Button>
               </div>
-            </div>
 
-            {/* Control Buttons */}
-            <div className="flex flex-col items-center justify-center gap-4">
-              <Button
-                onClick={handleMoveRight}
-                disabled={selectedAvailable.length === 0}
-                variant="secondary"
-                className="p-2"
-              >
-                <ChevronRight size={24} />
-              </Button>
-              <Button
-                onClick={handleMoveLeft}
-                disabled={selectedChosen.length === 0}
-                variant="secondary"
-                className="p-2"
-              >
-                <ChevronLeft size={24} />
-              </Button>
-            </div>
-
-            {/* Selected Options */}
-            <div className="flex-1">
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <input
-                    type="text"
-                    placeholder="Buscar sistemas seleccionados..."
-                    className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={searchRight}
-                    onChange={(e) => setSearchRight(e.target.value)}
-                  />
+              {/* Selected Options */}
+              <div className="flex-1">
+                <div className="mb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Buscar sistemas seleccionados..."
+                      className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={searchRight}
+                      onChange={(e) => setSearchRight(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="border rounded-lg h-96 overflow-y-auto">
-                {filteredSelectedOptions.map(option => (
-                  <div
-                    key={option.id}
-                    className={`p-3 cursor-pointer ${
-                      selectedChosen.includes(option.id)
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'hover:bg-gray-50'
-                    }`}
-                    onClick={() => {
-                      if (selectedChosen.includes(option.id)) {
-                        setSelectedChosen(selectedChosen.filter(id => id !== option.id));
-                      } else {
-                        setSelectedChosen([...selectedChosen, option.id]);
-                      }
-                    }}
-                  >
-                    {option.label}
-                  </div>
-                ))}
+                <div className="border rounded-lg h-96 overflow-y-auto">
+                  {filteredSelectedOptions.map(option => (
+                    <div
+                      key={option.id}
+                      className={`p-3 cursor-pointer ${
+                        selectedChosen.includes(option.id)
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => {
+                        if (selectedChosen.includes(option.id)) {
+                          setSelectedChosen(selectedChosen.filter(id => id !== option.id));
+                        } else {
+                          setSelectedChosen([...selectedChosen, option.id]);
+                        }
+                      }}
+                    >
+                      {option.label}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
