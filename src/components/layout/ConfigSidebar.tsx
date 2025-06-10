@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
@@ -189,10 +189,41 @@ const configMenu = [
 
 const ConfigSidebar: React.FC = () => {
   const location = useLocation();
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [activeMenus, setActiveMenus] = useState<string[]>([]);
+
+  // Initialize active menus based on current path
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const menusToOpen: string[] = [];
+    
+    configMenu.forEach((item) => {
+      // Check if current path starts with this menu's path or any of its subitems
+      const isCurrentMenuActive = currentPath.startsWith(item.path) || 
+        (item.subItems && item.subItems.some(sub => currentPath.startsWith(sub.path)));
+      
+      if (isCurrentMenuActive) {
+        menusToOpen.push(item.path);
+      }
+    });
+    
+    setActiveMenus(menusToOpen);
+  }, [location.pathname]);
 
   const handleMenuClick = (path: string) => {
-    setActiveMenu(activeMenu === path ? null : path);
+    setActiveMenus(prev => {
+      if (prev.includes(path)) {
+        return prev.filter(p => p !== path);
+      } else {
+        return [...prev, path];
+      }
+    });
+  };
+
+  const isMenuActive = (item: any) => {
+    const currentPath = location.pathname;
+    // Only highlight if it's an exact match or if we're on a subitem of this menu
+    return currentPath === item.path || 
+           (item.subItems && item.subItems.some((sub: any) => currentPath === sub.path));
   };
 
   return (
@@ -203,27 +234,27 @@ const ConfigSidebar: React.FC = () => {
             <button
               type="button"
               onClick={() => handleMenuClick(item.path)}
-              className={`flex items-center w-full px-4 py-2 text-left ${
-                location.pathname.startsWith(item.path)
+              className={`flex items-center w-full px-4 py-2 text-left transition-colors ${
+                isMenuActive(item)
                   ? "bg-blue-100 text-blue-700"
-                  : "hover:bg-gray-100"
+                  : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <span className="flex-1">{item.label}</span>
               {item.subItems && (
-                activeMenu === item.path ? <ChevronDown size={16} /> : <ChevronRight size={16} />
+                activeMenus.includes(item.path) ? <ChevronDown size={16} /> : <ChevronRight size={16} />
               )}
             </button>
-            {item.subItems && activeMenu === item.path && (
+            {item.subItems && activeMenus.includes(item.path) && (
               <ul className="ml-4">
                 {item.subItems.map((sub) => (
                   <li key={sub.path}>
                     <Link
                       to={sub.path}
-                      className={`block px-4 py-2 text-sm ${
+                      className={`block px-4 py-2 text-sm transition-colors ${
                         location.pathname === sub.path
-                          ? "bg-blue-50 text-blue-600"
-                          : "hover:bg-gray-50"
+                          ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                       }`}
                     >
                       {sub.label}
