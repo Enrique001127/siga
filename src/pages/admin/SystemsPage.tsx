@@ -18,9 +18,23 @@ interface SystemForm {
   icon: string;
 }
 
+interface Institution {
+  id: string;
+  name: string;
+}
+
+const institutions: Institution[] = [
+  { id: '1', name: 'Universidad de las Ciencias Informáticas (UCI)' },
+  { id: '2', name: 'Instituto Superior Politécnico José Antonio Echeverría (CUJAE)' },
+  { id: '3', name: 'Universidad de La Habana (UH)' },
+  { id: '4', name: 'Universidad Central "Marta Abreu" de Las Villas (UCLV)' },
+  { id: '5', name: 'Universidad de Oriente (UO)' },
+];
+
 const SystemsPage: React.FC = () => {
   const [searchLeft, setSearchLeft] = useState('');
   const [searchRight, setSearchRight] = useState('');
+  const [selectedInstitution, setSelectedInstitution] = useState<string>('1');
   const [availableOptions, setAvailableOptions] = useState<SystemOption[]>([
     { id: '1', label: 'Abastecimiento' },
     { id: '2', label: 'Reservación' },
@@ -64,6 +78,7 @@ const SystemsPage: React.FC = () => {
   const handleSaveChanges = () => {
     // Aquí iría la lógica para guardar los cambios
     console.log('Cambios guardados:', {
+      institution: selectedInstitution,
       selectedOptions,
       availableOptions
     });
@@ -102,26 +117,48 @@ const SystemsPage: React.FC = () => {
     option.label.toLowerCase().includes(searchRight.toLowerCase())
   );
 
+  const selectedInstitutionName = institutions.find(inst => inst.id === selectedInstitution)?.name || '';
+
   return (
     <Layout>
       <div className="flex h-full">
         <ConfigSidebar />
         <div className="flex-1 p-6">
+          {/* Institution Selector Bar */}
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-blue-900 whitespace-nowrap">
+                Institución:
+              </label>
+              <select
+                value={selectedInstitution}
+                onChange={(e) => setSelectedInstitution(e.target.value)}
+                className="flex-1 rounded-md border border-blue-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                {institutions.map((institution) => (
+                  <option key={institution.id} value={institution.id}>
+                    {institution.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="mb-6 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">Configuración de Sistemas</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Configuración de Módulos</h1>
             <div className="flex gap-2">
               <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <Dialog.Trigger asChild>
                   <Button variant="primary" className="flex items-center gap-2">
                     <Plus size={20} />
-                    Agregar Sistema
+                    Agregar Módulo
                   </Button>
                 </Dialog.Trigger>
                 <Dialog.Portal>
                   <Dialog.Overlay className="fixed inset-0 bg-black/50" />
                   <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-[400px]">
                     <div className="flex justify-between items-center mb-4">
-                      <Dialog.Title className="text-xl font-bold">Agregar Nuevo Sistema</Dialog.Title>
+                      <Dialog.Title className="text-xl font-bold">Agregar Nuevo Módulo</Dialog.Title>
                       <Dialog.Close asChild>
                         <button className="text-gray-400 hover:text-gray-600">
                           <X size={24} />
@@ -145,7 +182,7 @@ const SystemsPage: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Código de sistema
+                            Código de módulo
                           </label>
                           <input
                             type="text"
@@ -227,7 +264,7 @@ const SystemsPage: React.FC = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     <input
                       type="text"
-                      placeholder="Buscar sistemas disponibles..."
+                      placeholder="Buscar módulos disponibles..."
                       className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={searchLeft}
                       onChange={(e) => setSearchLeft(e.target.value)}
@@ -284,7 +321,7 @@ const SystemsPage: React.FC = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     <input
                       type="text"
-                      placeholder="Buscar sistemas seleccionados..."
+                      placeholder="Buscar módulos seleccionados..."
                       className="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       value={searchRight}
                       onChange={(e) => setSearchRight(e.target.value)}
