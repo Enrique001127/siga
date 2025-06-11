@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import ConfigSidebar from '../../components/layout/ConfigSidebar';
-import { Search, Plus, ChevronRight, ChevronLeft, Trash2, X } from 'lucide-react';
+import { Search, Plus, ChevronRight, ChevronLeft, Trash2, X, AlertCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useInstitutions } from '../../hooks/useInstitutions';
 
 interface SystemOption {
   id: string;
@@ -18,23 +19,11 @@ interface SystemForm {
   icon: string;
 }
 
-interface Institution {
-  id: string;
-  name: string;
-}
-
-const institutions: Institution[] = [
-  { id: '1', name: 'Universidad de las Ciencias Informáticas (UCI)' },
-  { id: '2', name: 'Instituto Superior Politécnico José Antonio Echeverría (CUJAE)' },
-  { id: '3', name: 'Universidad de La Habana (UH)' },
-  { id: '4', name: 'Universidad Central "Marta Abreu" de Las Villas (UCLV)' },
-  { id: '5', name: 'Universidad de Oriente (UO)' },
-];
-
 const SystemsPage: React.FC = () => {
+  const { institutions, loading: institutionsLoading, error: institutionsError } = useInstitutions();
   const [searchLeft, setSearchLeft] = useState('');
   const [searchRight, setSearchRight] = useState('');
-  const [selectedInstitution, setSelectedInstitution] = useState<string>('1');
+  const [selectedInstitution, setSelectedInstitution] = useState<string>('');
   const [availableOptions, setAvailableOptions] = useState<SystemOption[]>([
     { id: '1', label: 'Abastecimiento' },
     { id: '2', label: 'Reservación' },
@@ -54,6 +43,13 @@ const SystemsPage: React.FC = () => {
     path: '',
     icon: '',
   });
+
+  // Set default institution when institutions are loaded
+  React.useEffect(() => {
+    if (institutions.length > 0 && !selectedInstitution) {
+      setSelectedInstitution(String(institutions[0].id));
+    }
+  }, [institutions, selectedInstitution]);
 
   const handleMoveRight = () => {
     const itemsToMove = availableOptions.filter(option => selectedAvailable.includes(option.id));
@@ -117,7 +113,23 @@ const SystemsPage: React.FC = () => {
     option.label.toLowerCase().includes(searchRight.toLowerCase())
   );
 
-  const selectedInstitutionName = institutions.find(inst => inst.id === selectedInstitution)?.name || '';
+  const selectedInstitutionName = institutions.find(inst => inst.id === Number(selectedInstitution))?.nombre || '';
+
+  if (institutionsLoading) {
+    return (
+      <Layout>
+        <div className="flex h-full">
+          <ConfigSidebar />
+          <div className="flex-1 p-6 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Cargando instituciones...</p>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -130,17 +142,29 @@ const SystemsPage: React.FC = () => {
               <label className="text-sm font-medium text-blue-900 whitespace-nowrap">
                 Institución:
               </label>
-              <select
-                value={selectedInstitution}
-                onChange={(e) => setSelectedInstitution(e.target.value)}
-                className="flex-1 rounded-md border border-blue-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {institutions.map((institution) => (
-                  <option key={institution.id} value={institution.id}>
-                    {institution.name}
-                  </option>
-                ))}
-              </select>
+              {institutionsError ? (
+                <div className="flex items-center gap-2 text-red-600">
+                  <AlertCircle size={16} />
+                  <span className="text-sm">Error cargando instituciones: {institutionsError}</span>
+                </div>
+              ) : (
+                <select
+                  value={selectedInstitution}
+                  onChange={(e) => setSelectedInstitution(e.target.value)}
+                  className="flex-1 rounded-md border border-blue-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={institutions.length === 0}
+                >
+                  {institutions.length === 0 ? (
+                    <option value="">No hay instituciones disponibles</option>
+                  ) : (
+                    institutions.map((institution) => (
+                      <option key={institution.id} value={institution.id}>
+                        {institution.nombre} ({institution.siglas})
+                      </option>
+                    ))
+                  )}
+                </select>
+              )}
             </div>
           </div>
 
@@ -356,6 +380,7 @@ const SystemsPage: React.FC = () => {
                 variant="primary"
                 onClick={handleSaveChanges}
                 className="px-6"
+                disabled={!selectedInstitution}
               >
                 Listo
               </Button>
