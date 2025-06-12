@@ -37,35 +37,39 @@ const configMenu = [
       },
     ],
   },
-  { label: "Cajero", path: "/dashboard/configuracion/cajero",
+  { 
+    label: "Cajero", 
+    path: "/dashboard/configuracion/cajero",
     subItems: [
-        {
-          label: "Tipos de tarjetas",
-          path: "/dashboard/configuracion/cajero/tipos-de-tarjetas"
-        },
-        {
-          label: "Tarjetas",
-          path: "/dashboard/configuracion/cajero/tarjetas"
-        },
-        {
-          label: "Asignar IP a puertas",
-          path: "/dashboard/configuracion/cajero/asignar-ip-a-puertas"
-        },
-        {
-          label: "Configuraciones",
-          path: "/dashboard/configuracion/cajero/configuraciones"
-        },
-        {
-          label: "Torpedos",
-          path: "/dashboard/configuracion/cajero/torpedos"
-        },
-        {
-          label: "Solapin perdido",
-          path: "/dashboard/configuracion/cajero/solapin-perdido"
-        },
+      {
+        label: "Tipos de tarjetas",
+        path: "/dashboard/configuracion/cajero/tipos-de-tarjetas"
+      },
+      {
+        label: "Tarjetas",
+        path: "/dashboard/configuracion/cajero/tarjetas"
+      },
+      {
+        label: "Asignar IP a puertas",
+        path: "/dashboard/configuracion/cajero/asignar-ip-a-puertas"
+      },
+      {
+        label: "Configuraciones",
+        path: "/dashboard/configuracion/cajero/configuraciones"
+      },
+      {
+        label: "Torpedos",
+        path: "/dashboard/configuracion/cajero/torpedos"
+      },
+      {
+        label: "Solapin perdido",
+        path: "/dashboard/configuracion/cajero/solapin-perdido"
+      },
     ],
   },
-  { label: "Facturación", path: "/dashboard/configuracion/facturacion", 
+  { 
+    label: "Facturación", 
+    path: "/dashboard/configuracion/facturacion", 
     subItems: [
       {
         label: "Reglas a excluir",
@@ -73,7 +77,9 @@ const configMenu = [
       },
     ],
   },
-  { label: "Distribución", path: "/dashboard/configuracion/distribucion",
+  { 
+    label: "Distribución", 
+    path: "/dashboard/configuracion/distribucion",
     subItems: [
       {
         label: "Categorías",
@@ -101,7 +107,9 @@ const configMenu = [
       },
     ],
   },
-  { label: "Reservación", path: "/dashboard/configuracion/reservacion",
+  { 
+    label: "Reservación", 
+    path: "/dashboard/configuracion/reservacion",
     subItems: [
       {
         label: "Configuraciones",
@@ -113,47 +121,51 @@ const configMenu = [
       },
     ],
   },
-  { label: "Configuración", path: "/dashboard/configuracion/configuracion", 
+  { 
+    label: "Configuración", 
+    path: "/dashboard/configuracion/configuracion-general", 
     subItems: [
       {
         label: "Configuración de comensales",
-        path: "/dashboard/configuracion/configuracion/configuracion-de-comensales"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-de-comensales"
       },
       {
         label: "Comensales",
-        path: "/dashboard/configuracion/configuracion/comensales"
+        path: "/dashboard/configuracion/configuracion-general/comensales"
       },
       {
         label: "Configuración de personas por evento",
-        path: "/dashboard/configuracion/configuracion/configuracion-de-personas-por-evento"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-de-personas-por-evento"
       },
       {
         label: "Configuración del proceso",
-        path: "/dashboard/configuracion/configuracion/configuracion-del-proceso"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-del-proceso"
       },
       {
         label: "Configuración de cobro",
-        path: "/dashboard/configuracion/configuracion/configuracion-de-cobro"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-de-cobro"
       },
       {
         label: "Tareas programadas",
-        path: "/dashboard/configuracion/configuracion/tareas-programadas"
+        path: "/dashboard/configuracion/configuracion-general/tareas-programadas"
       },
       {
         label: "Configuración de elastic",
-        path: "/dashboard/configuracion/configuracion/configuracion-de-elastic"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-de-elastic"
       },
       {
         label: "Configuración de rabbitmq",
-        path: "/dashboard/configuracion/configuracion/configuracion-de-rabbitmq"
+        path: "/dashboard/configuracion/configuracion-general/configuracion-de-rabbitmq"
       },
       {
         label: "Avisos",
-        path: "/dashboard/configuracion/configuracion/avisos"
+        path: "/dashboard/configuracion/configuracion-general/avisos"
       },
     ],
   },
-  { label: "Seguridad", path: "/dashboard/configuracion/seguridad", 
+  { 
+    label: "Seguridad", 
+    path: "/dashboard/configuracion/seguridad", 
     subItems: [
       {
         label: "Sistemas",
@@ -209,14 +221,18 @@ const ConfigSidebar: React.FC = () => {
     setActiveMenus(menusToOpen);
   }, [location.pathname]);
 
-  const handleMenuClick = (path: string) => {
-    setActiveMenus(prev => {
-      if (prev.includes(path)) {
-        return prev.filter(p => p !== path);
-      } else {
-        return [...prev, path];
-      }
-    });
+  const handleMenuClick = (path: string, hasSubItems: boolean) => {
+    if (hasSubItems) {
+      // Toggle the submenu
+      setActiveMenus(prev => {
+        if (prev.includes(path)) {
+          return prev.filter(p => p !== path);
+        } else {
+          return [...prev, path];
+        }
+      });
+    }
+    // If it doesn't have subitems, navigation will be handled by the Link component
   };
 
   const isMenuActive = (item: any) => {
@@ -235,20 +251,35 @@ const ConfigSidebar: React.FC = () => {
       <ul>
         {configMenu.map((item) => (
           <li key={item.path}>
-            <button
-              type="button"
-              onClick={() => handleMenuClick(item.path)}
-              className={`flex items-center w-full px-4 py-2 text-left transition-colors ${
-                isMenuActive(item)
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex-1">{item.label}</span>
-              {item.subItems && (
-                activeMenus.includes(item.path) ? <ChevronDown size={16} /> : <ChevronRight size={16} />
-              )}
-            </button>
+            {item.subItems && item.subItems.length > 0 ? (
+              // Menu item with subitems - use button for toggle functionality
+              <button
+                type="button"
+                onClick={() => handleMenuClick(item.path, true)}
+                className={`flex items-center w-full px-4 py-2 text-left transition-colors ${
+                  isMenuActive(item)
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span className="flex-1">{item.label}</span>
+                {activeMenus.includes(item.path) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              </button>
+            ) : (
+              // Menu item without subitems - use Link for navigation
+              <Link
+                to={item.path}
+                className={`flex items-center w-full px-4 py-2 text-left transition-colors ${
+                  isMenuActive(item)
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span className="flex-1">{item.label}</span>
+              </Link>
+            )}
+            
+            {/* Render subitems if menu is active and has subitems */}
             {item.subItems && activeMenus.includes(item.path) && (
               <ul className="ml-4">
                 {item.subItems.map((sub) => (
