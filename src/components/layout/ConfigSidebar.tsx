@@ -9,31 +9,31 @@ const configMenu = [
     subItems: [
       {
         label: "Clasificacion de platos",
-        path: "/dashboard/configuracion/abastecimiento/clasificacion de platos",
+        path: "/dashboard/configuracion/abastecimiento/clasificacion-de-platos",
       },
       {
         label: "Unidades de medidas",
-        path: "/dashboard/configuracion/abastecimiento/unidades de medidas",
+        path: "/dashboard/configuracion/abastecimiento/unidades-de-medidas",
       },
       {
         label: "Clasificacion de unidades de medidas",
-        path: "/dashboard/configuracion/abastecimiento/clasificacion de unidades de medidas",
+        path: "/dashboard/configuracion/abastecimiento/clasificacion-de-unidades-de-medidas",
       },
       {
         label: "Tipos de productos",
-        path: "/dashboard/configuracion/abastecimiento/tipos de productos",
+        path: "/dashboard/configuracion/abastecimiento/tipos-de-productos",
       },
       {
         label: "Categorias de tipos de productos",
-        path: "/dashboard/configuracion/abastecimiento/categorias de tipos de productos",
+        path: "/dashboard/configuracion/abastecimiento/categorias-de-tipos-de-productos",
       },
       {
         label: "Productos en almacen",
-        path: "/dashboard/configuracion/abastecimiento/productos en almacen",
+        path: "/dashboard/configuracion/abastecimiento/productos-en-almacen",
       },
       {
         label: "Planificacion de menu",
-        path: "/dashboard/configuracion/abastecimiento/planificacion de menu",
+        path: "/dashboard/configuracion/abastecimiento/planificacion-de-menu",
       },
     ],
   },
@@ -41,7 +41,7 @@ const configMenu = [
     subItems: [
         {
           label: "Tipos de tarjetas",
-          path: "/dashboard/configuracion/cajero/tipos de tarjetas"
+          path: "/dashboard/configuracion/cajero/tipos-de-tarjetas"
         },
         {
           label: "Tarjetas",
@@ -105,51 +105,51 @@ const configMenu = [
     subItems: [
       {
         label: "Configuraciones",
-        path: "/dashboard/configuracion/facturacion/configuraciones"
+        path: "/dashboard/configuracion/reservacion/configuraciones"
       },
       {
         label: "Asignar responsable de reservacion",
-        path: "/dashboard/configuracion/facturacion/asignar-responsable-de-reservacion"
+        path: "/dashboard/configuracion/reservacion/asignar-responsable-de-reservacion"
       },
     ],
   },
-  { label: "Configuración", path: "/dashboard/configuracion", 
+  { label: "Configuración", path: "/dashboard/configuracion/configuracion", 
     subItems: [
       {
         label: "Configuración de comensales",
-        path: "/dashboard/configuracion/facturacion/configuracion-de-comensales"
+        path: "/dashboard/configuracion/configuracion/configuracion-de-comensales"
       },
       {
         label: "Comensales",
-        path: "/dashboard/configuracion/facturacion/comensales"
+        path: "/dashboard/configuracion/configuracion/comensales"
       },
       {
         label: "Configuración de personas por evento",
-        path: "/dashboard/configuracion/facturacion/configuracion-de-personas-por-evento"
+        path: "/dashboard/configuracion/configuracion/configuracion-de-personas-por-evento"
       },
       {
         label: "Configuración del proceso",
-        path: "/dashboard/configuracion/facturacion/configuracion-del-proceso"
+        path: "/dashboard/configuracion/configuracion/configuracion-del-proceso"
       },
       {
         label: "Configuración de cobro",
-        path: "/dashboard/configuracion/facturacion/configuracion-de-cobro"
+        path: "/dashboard/configuracion/configuracion/configuracion-de-cobro"
       },
       {
         label: "Tareas programadas",
-        path: "/dashboard/configuracion/facturacion/tareas-programadas"
+        path: "/dashboard/configuracion/configuracion/tareas-programadas"
       },
       {
         label: "Configuración de elastic",
-        path: "/dashboard/configuracion/facturacion/configuracion-de-elastic"
+        path: "/dashboard/configuracion/configuracion/configuracion-de-elastic"
       },
       {
         label: "Configuración de rabbitmq",
-        path: "/dashboard/configuracion/facturacion/configuracion-de-rabbitmq"
+        path: "/dashboard/configuracion/configuracion/configuracion-de-rabbitmq"
       },
       {
         label: "Avisos",
-        path: "/dashboard/configuracion/facturacion/avisos"
+        path: "/dashboard/configuracion/configuracion/avisos"
       },
     ],
   },
@@ -197,9 +197,9 @@ const ConfigSidebar: React.FC = () => {
     const menusToOpen: string[] = [];
     
     configMenu.forEach((item) => {
-      // Check if current path starts with this menu's path or any of its subitems
-      const isCurrentMenuActive = currentPath.startsWith(item.path) || 
-        (item.subItems && item.subItems.some(sub => currentPath.startsWith(sub.path)));
+      // Check if current path matches this menu or any of its subitems
+      const isCurrentMenuActive = currentPath === item.path || 
+        (item.subItems && item.subItems.some(sub => currentPath === sub.path));
       
       if (isCurrentMenuActive) {
         menusToOpen.push(item.path);
@@ -221,9 +221,13 @@ const ConfigSidebar: React.FC = () => {
 
   const isMenuActive = (item: any) => {
     const currentPath = location.pathname;
-    // Only highlight if it's an exact match or if we're on a subitem of this menu
+    // Check if current path matches exactly or if we're on a subitem of this menu
     return currentPath === item.path || 
            (item.subItems && item.subItems.some((sub: any) => currentPath === sub.path));
+  };
+
+  const isSubItemActive = (subItem: any) => {
+    return location.pathname === subItem.path;
   };
 
   return (
@@ -252,7 +256,7 @@ const ConfigSidebar: React.FC = () => {
                     <Link
                       to={sub.path}
                       className={`block px-4 py-2 text-sm transition-colors ${
-                        location.pathname === sub.path
+                        isSubItemActive(sub)
                           ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
                           : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                       }`}
